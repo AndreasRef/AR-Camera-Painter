@@ -21,14 +21,11 @@ void ofApp::setup() {
     
     ofBackground(127);
     
-    
     int fontSize = 8;
     if (ofxiOSGetOFWindow()->isRetinaSupportedOnDevice())
         fontSize *= 2;
     
     font.load("fonts/mono0755.ttf", fontSize);
-    
-    
     
     processor = ARProcessor::create(session);
     processor->setup();
@@ -37,31 +34,25 @@ void ofApp::setup() {
     utils.processor = processor;
     utils.session = session;
     
-
     camImage.allocate(ofGetWidth(), ofGetHeight());
-    
-    
-    
     
     //Alpha shader new
     ofEnableAlphaBlending();
-    //ofBackground(0);
     ofSetVerticalSync(true);
     
-    ofTrueTypeFont::setGlobalDpi(144);
-    dinpro_black60.load("DINPro-Black.otf", 60, true, true);
+//    ofTrueTypeFont::setGlobalDpi(144);
+//    dinpro_black60.load("DINPro-Black.otf", 60, true, true);
     
-    videos.resize(nLayers);
-    
+//    videos.resize(nLayers);
     maskFbos.resize(nLayers);
     fbos.resize(nLayers);
     
     for(int i = 0; i < nLayers; i++){
 //
-        videos[i].load("video" +  ofToString(i) +".mp4");
-
-        videos[i].setLoopState(OF_LOOP_NORMAL);
-        videos[i].play();
+//        videos[i].load("video" +  ofToString(i) +".mp4");
+//
+//        videos[i].setLoopState(OF_LOOP_NORMAL);
+//        videos[i].play();
     
         maskFbos[i].allocate(ofGetWidth(), ofGetHeight());
         fbos[i].allocate(ofGetWidth(), ofGetHeight());
@@ -78,24 +69,8 @@ void ofApp::setup() {
     brushImg.load("brush2.png");
     eraserImg.load("brush3.png");
     
-    tileImg.load("B.jpg");
-    //tileImg.resize(1920, 1080);
-    
     brushImg.setAnchorPercent(0.5, 0.5);
     eraserImg.setAnchorPercent(0.5, 0.5);
-    
-    
-    
-    // There are 3 of ways of loading a shader:
-    //
-    //  1 - Using just the name of the shader and ledding ofShader look for .frag and .vert:
-    //      Ex.: shader.load( "myShader");
-    //
-    //  2 - Giving the right file names for each one:
-    //      Ex.: shader.load( "myShader.vert","myShader.frag");
-    //
-    //  3 - And the third one is passing the shader programa on a single string;
-    //
     
     
 #ifdef TARGET_OPENGLES
@@ -160,9 +135,6 @@ void ofApp::setup() {
     
     bBrushDown = false;
     
-    
-    cout << ofGetWidth() << endl;
-    
 }
 
 
@@ -173,28 +145,24 @@ void ofApp::update(){
     
     //cout << utils.getCurrentCameraPosition() << endl;
     
-    
-    
-    
     //Shader alpha new
-    if (pause == false) {
-        for(int i = 0; i < videos.size(); i++){
-            videos[i].update();
-        }
-    }
+//    if (pause == false) {
+//        for(int i = 0; i < videos.size(); i++){
+//            videos[i].update();
+//        }
+//    }
     
     std::stringstream strm;
     strm << "fps: " << ofGetFrameRate();
     ofSetWindowTitle(strm.str());
     
-    if (clear) {
-        for (int i = 0; i < nLayers; i++){
-            maskFbos[i].begin();
-            ofClear(0,0,0,255);
-            maskFbos[i].end();
-        }
-    }
-    
+//    if (clear) {
+//        for (int i = 0; i < nLayers; i++){
+//            maskFbos[i].begin();
+//            ofClear(0,0,0,255);
+//            maskFbos[i].end();
+//        }
+//    }
 }
 
 
@@ -263,21 +231,18 @@ void ofApp::draw() {
     ofEnableAlphaBlending();
     //----------------------------------------------------------
     // this is our alpha mask which we draw into.
-
     
     if(bBrushDown && eraserBrush==false) {
         for(int i = 0; i < nLayers; i++){
             if(currentLayer == i) {
                 maskFbos[i].begin();
                 ofSetColor(255,brushAlpha);
-                //brushImg.draw(mouseX,mouseY,brushSize,brushSize);
                 brushImg.draw(paintX,paintY,brushSize,brushSize);
                 maskFbos[i].end();
             } else {
                 //Clear the other layers in the area your are painting
                 maskFbos[i].begin();
                 //ofSetColor(255, 255);
-                //eraserImg.draw(mouseX,mouseY,brushSize,brushSize);
                 eraserImg.draw(paintX,paintY,brushSize,brushSize);
                 maskFbos[i].end();
             }
@@ -296,11 +261,8 @@ void ofApp::draw() {
         shader.begin();
         // here is where the fbo is passed to the shader
         shader.setUniformTexture("maskTex", maskFbos[i].getTextureReference(), 1 );
-
-        //videos[i].draw(0,0);
-        //tileImg.draw(0,0); //or use a basic image
         
-        camImage.draw(0,0); //Or use the cam image
+        camImage.draw(0,0); //Use the cam image
 
         shader.end();
         fbos[i].end();
@@ -317,6 +279,8 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::touchDown(ofTouchEventArgs &touch){
     
+    //planes.clear();
+    
     plane p = utils.getScreenPlane(1.0, 0);
     planes.push_back(p);
     
@@ -328,22 +292,13 @@ void ofApp::touchDown(ofTouchEventArgs &touch){
     fbos[0].draw(0,0);
     images.back().end();
     
-//    for (int i = 0; i < 10; i++){
-//        plane p = utils.getScreenPlane(1.0, ofMap(i, 0, 9, -.2, -1));
-//        planes.push_back(p);
-//    }
-
-    
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs &touch){
-    
     bBrushDown = true;
     paintX = touch.x;
     paintY = touch.y;
-    
 }
 
 //--------------------------------------------------------------
@@ -356,10 +311,21 @@ void ofApp::touchDoubleTap(ofTouchEventArgs &touch){
     
     planes.clear();
     
+//    for (int i = 0; i < images.size(); i ++) {
+//    images[i].begin();
+//    ofClear(0,0,0,0);
+//    images[i].end();
+//    }
+        
+    //Clear mask
     maskFbos[0].begin();
     ofClear(0,0,0,255);
     maskFbos[0].end();
     
+    //Clear main fbo
+    fbos[0].begin();
+    ofClear(0,0,0,255);
+    fbos[0].end();
     
 }
 

@@ -37,30 +37,16 @@ public:
 
     arUtils utils;
     
-    
     vector < plane > planes;
     vector < ofFbo > images;
     
     ofFbo camImage;
     
-    //Alpha shader old
-//    ofImage     srcImg;
-//    ofImage     dstImg;
-//    ofImage     brushImg;
-//    
-//    ofFbo       maskFbo;
-//    ofFbo       fbo;
-//    ofShader    shader;
-//    bool        bBrushDown;
-    
     //Alpha shader new
     ofImage     brushImg;
     ofImage     eraserImg;
     
-    ofImage     tileImg;
-    
-    
-    vector<ofVideoPlayer> videos;
+//    vector<ofVideoPlayer> videos;
     vector<ofFbo> maskFbos;
     vector<ofFbo> fbos;
     
@@ -71,22 +57,17 @@ public:
     
     int nLayers = 1;
     
-    int nTotalVideos = 10;
-    
     int brushSize = 150;
     int brushAlpha = 255;
     int currentLayer = 0;
     bool pause = false;
     bool showFont = false;
     bool clear = false;
-    //ofxButton clear;
-    //ofxPanel gui;
     
     ofTrueTypeFont    dinpro_black60;
     
     int paintX = 0;
     int paintY = 0;
-    
 };
 
 
