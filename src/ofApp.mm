@@ -1,7 +1,5 @@
 #include "ofApp.h"
 
-
-
 //--------------------------------------------------------------
 ofApp :: ofApp (ARSession * session){
     this->session = session;
@@ -40,20 +38,10 @@ void ofApp::setup() {
     ofEnableAlphaBlending();
     ofSetVerticalSync(true);
     
-//    ofTrueTypeFont::setGlobalDpi(144);
-//    dinpro_black60.load("DINPro-Black.otf", 60, true, true);
-    
-//    videos.resize(nLayers);
     maskFbos.resize(nLayers);
     fbos.resize(nLayers);
     
     for(int i = 0; i < nLayers; i++){
-//
-//        videos[i].load("video" +  ofToString(i) +".mp4");
-//
-//        videos[i].setLoopState(OF_LOOP_NORMAL);
-//        videos[i].play();
-    
         maskFbos[i].allocate(ofGetWidth(), ofGetHeight());
         fbos[i].allocate(ofGetWidth(), ofGetHeight());
         
@@ -142,27 +130,11 @@ void ofApp::setup() {
 void ofApp::update(){
     
     processor->update();
-    
     //cout << utils.getCurrentCameraPosition() << endl;
-    
-    //Shader alpha new
-//    if (pause == false) {
-//        for(int i = 0; i < videos.size(); i++){
-//            videos[i].update();
-//        }
-//    }
     
     std::stringstream strm;
     strm << "fps: " << ofGetFrameRate();
     ofSetWindowTitle(strm.str());
-    
-//    if (clear) {
-//        for (int i = 0; i < nLayers; i++){
-//            maskFbos[i].begin();
-//            ofClear(0,0,0,255);
-//            maskFbos[i].end();
-//        }
-//    }
 }
 
 
@@ -180,7 +152,6 @@ void ofApp::draw() {
     camImage.draw(0,0);
     
     ofEnableDepthTest();
-    
     
     if (session.currentFrame){
         if (session.currentFrame.camera){
@@ -231,49 +202,32 @@ void ofApp::draw() {
     ofEnableAlphaBlending();
     //----------------------------------------------------------
     // this is our alpha mask which we draw into.
+
     
-    if(bBrushDown && eraserBrush==false) {
-        for(int i = 0; i < nLayers; i++){
-            if(currentLayer == i) {
-                maskFbos[i].begin();
-                ofSetColor(255,brushAlpha);
-                brushImg.draw(paintX,paintY,brushSize,brushSize);
-                maskFbos[i].end();
-            } else {
-                //Clear the other layers in the area your are painting
-                maskFbos[i].begin();
-                //ofSetColor(255, 255);
-                eraserImg.draw(paintX,paintY,brushSize,brushSize);
-                maskFbos[i].end();
-            }
-        }
+    if(bBrushDown) {
+        maskFbos[0].begin();
+        ofSetColor(255,brushAlpha);
+        brushImg.draw(paintX,paintY,brushSize,brushSize);
+        maskFbos[0].end();
     }
     
-    
-    for (int i = 0; i < nLayers; i ++) {
         ofEnableBlendMode(OF_BLENDMODE_SCREEN);
-        //Could perhaps be out of the loop?
-        fbos[i].begin();
-
-        // Cleaning everthing with alpha mask on 0 in order to make it transparent by default
+        fbos[0].begin();
         ofClear(0, 0, 0, 0);
-
         shader.begin();
         // here is where the fbo is passed to the shader
-        shader.setUniformTexture("maskTex", maskFbos[i].getTextureReference(), 1 );
+        shader.setUniformTexture("maskTex", maskFbos[0].getTextureReference(), 1 );
         
         camImage.draw(0,0); //Use the cam image
-
+        
         shader.end();
-        fbos[i].end();
+        fbos[0].end();
         ofEnableAlphaBlending();
-        //fbos[i].draw(0,0);
-    }
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-    //
+    
 }
 
 //--------------------------------------------------------------
@@ -311,12 +265,6 @@ void ofApp::touchDoubleTap(ofTouchEventArgs &touch){
     
     planes.clear();
     
-//    for (int i = 0; i < images.size(); i ++) {
-//    images[i].begin();
-//    ofClear(0,0,0,0);
-//    images[i].end();
-//    }
-        
     //Clear mask
     maskFbos[0].begin();
     ofClear(0,0,0,255);
