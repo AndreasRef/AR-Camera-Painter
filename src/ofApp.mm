@@ -122,7 +122,7 @@ void ofApp::setup() {
 #endif
     
     bBrushDown = false;
-    
+    debugMask.allocate(ofGetWidth(), ofGetHeight());
 }
 
 
@@ -240,6 +240,18 @@ void ofApp::draw() {
         shader.end();
         fbos[0].end();
         ofEnableAlphaBlending();
+    
+    
+    if(bBrushDown) { //Visualize the mask
+        debugMask.begin();
+        //ofDrawCircle(paintX, paintY, 10);
+        ofSetColor(0,255,0,brushAlpha);
+        brushImg.draw(paintX,paintY,brushSize,brushSize);
+        debugMask.end();
+        debugMask.draw(0,0);
+    }
+    
+    //ofDrawCircle(paintX, paintY, 10);
 }
 
 //--------------------------------------------------------------
@@ -252,11 +264,11 @@ void ofApp::touchDown(ofTouchEventArgs &touch){
     
     //planes.clear();
     
-    plane p = utils.getScreenPlane(1.0, 0);
-    //planes[0] = p;
-    planes.push_back(p);
     
-    myPlane = p;
+    //planes[0] = p;
+    //planes.push_back(p);
+    
+    
     
 //    ofFbo temp;
 //    images.push_back(temp);
@@ -268,16 +280,22 @@ void ofApp::touchDown(ofTouchEventArgs &touch){
     
         //ofFbo temp;
         //images.push_back(temp);
-        myImage.allocate(camImage.getWidth(), camImage.getHeight());
-        myImage.begin();
-        //camImage.draw(0,0);
-        fbos[0].draw(0,0);
-        myImage.end();
-
- 
     
-    cout << ofToString("touchDown") << endl;
-    debugTouch = true;
+        //camImage.draw(0,0);
+    
+
+    
+    //Single image + single plane
+//    plane p = utils.getScreenPlane(1.0, 0);
+//    myPlane = p;
+//    myImage.allocate(camImage.getWidth(), camImage.getHeight());
+//    myImage.begin();
+//    fbos[0].draw(0,0);
+//    myImage.end();
+//
+//
+//    cout << ofToString("touchDown") << endl;
+//    debugTouch = true;
 }
 
 //--------------------------------------------------------------
@@ -292,6 +310,18 @@ void ofApp::touchMoved(ofTouchEventArgs &touch){
 
 //--------------------------------------------------------------
 void ofApp::touchUp(ofTouchEventArgs &touch){
+    
+    plane p = utils.getScreenPlane(1.0, 0);
+    myPlane = p;
+    myImage.allocate(camImage.getWidth(), camImage.getHeight());
+    myImage.begin();
+    fbos[0].draw(0,0);
+    myImage.end();
+    
+    
+    cout << ofToString("touchDown") << endl;
+    debugTouch = true;
+    
     bBrushDown = false;
     
     cout << ofToString("touchUp") << endl;
@@ -313,6 +343,12 @@ void ofApp::touchDoubleTap(ofTouchEventArgs &touch){
     fbos[0].begin();
     ofClear(0,0,0,0);
     fbos[0].end();
+    
+    
+    //Clear debug mask
+    debugMask.begin();
+    ofClear(0,0,0,0);
+    debugMask.end();
     
     
     cout << ofToString("touchDoubleTap") << endl;

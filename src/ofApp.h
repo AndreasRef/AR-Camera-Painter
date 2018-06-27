@@ -73,6 +73,10 @@ public:
     int paintY = 0;
     
     bool debugTouch = false;
+    
+    ofFbo debugMask;
+    
+    
 };
 
 
