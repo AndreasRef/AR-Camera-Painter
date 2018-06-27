@@ -40,6 +40,7 @@ public:
     vector < plane > planes;
     vector < ofFbo > images;
     
+    ofFbo myImage;
     plane myPlane;
     
     ofFbo camImage;
@@ -70,6 +71,8 @@ public:
     
     int paintX = 0;
     int paintY = 0;
+    
+    bool debugTouch = false;
 };
 
 

@@ -159,21 +159,38 @@ void ofApp::draw() {
             camera.begin();
             processor->setARCameraMatrices();
             
-            for (int i = 0; i < planes.size(); i++){
-            ofMesh m;
-            m.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
-            m.addVertex(planes[i].pts[0]);
-            m.addVertex(planes[i].pts[1]);
-            m.addVertex(planes[i].pts[3]);
-            m.addVertex(planes[i].pts[2]);
-            m.addTexCoord(images[i].getTexture().getCoordFromPercent(0,0));
-            m.addTexCoord(images[i].getTexture().getCoordFromPercent(1,0));
-            m.addTexCoord(images[i].getTexture().getCoordFromPercent(0,1));
-            m.addTexCoord(images[i].getTexture().getCoordFromPercent(1,1));
-            images[i].getTexture().bind();
-            m.draw();
-            images[i].getTexture().unbind();
-             }
+//            for (int i = 0; i < planes.size(); i++){
+//            ofMesh m;
+//            m.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+//            m.addVertex(planes[i].pts[0]);
+//            m.addVertex(planes[i].pts[1]);
+//            m.addVertex(planes[i].pts[3]);
+//            m.addVertex(planes[i].pts[2]);
+//            m.addTexCoord(images[i].getTexture().getCoordFromPercent(0,0));
+//            m.addTexCoord(images[i].getTexture().getCoordFromPercent(1,0));
+//            m.addTexCoord(images[i].getTexture().getCoordFromPercent(0,1));
+//            m.addTexCoord(images[i].getTexture().getCoordFromPercent(1,1));
+//            images[i].getTexture().bind();
+//            m.draw();
+//            images[i].getTexture().unbind();
+//             }
+            
+            
+            if (debugTouch) {
+                        ofMesh m;
+                        m.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+                        m.addVertex(myPlane.pts[0]);
+                        m.addVertex(myPlane.pts[1]);
+                        m.addVertex(myPlane.pts[3]);
+                        m.addVertex(myPlane.pts[2]);
+                        m.addTexCoord(myImage.getTexture().getCoordFromPercent(0,0));
+                        m.addTexCoord(myImage.getTexture().getCoordFromPercent(1,0));
+                        m.addTexCoord(myImage.getTexture().getCoordFromPercent(0,1));
+                        m.addTexCoord(myImage.getTexture().getCoordFromPercent(1,1));
+                        myImage.getTexture().bind();
+                        m.draw();
+                        myImage.getTexture().unbind();
+            }
             
             camera.end();
         }
@@ -241,17 +258,26 @@ void ofApp::touchDown(ofTouchEventArgs &touch){
     
     myPlane = p;
     
-    ofFbo temp;
-    images.push_back(temp);
-    images.back().allocate(camImage.getWidth(), camImage.getHeight());
-    images.back().begin();
-    //camImage.draw(0,0);
-    fbos[0].draw(0,0);
-    images.back().end();
+//    ofFbo temp;
+//    images.push_back(temp);
+//    images.back().allocate(camImage.getWidth(), camImage.getHeight());
+//    images.back().begin();
+//    //camImage.draw(0,0);
+//    fbos[0].draw(0,0);
+//    images.back().end();
+    
+        //ofFbo temp;
+        //images.push_back(temp);
+        myImage.allocate(camImage.getWidth(), camImage.getHeight());
+        myImage.begin();
+        //camImage.draw(0,0);
+        fbos[0].draw(0,0);
+        myImage.end();
+
  
     
     cout << ofToString("touchDown") << endl;
-    
+    debugTouch = true;
 }
 
 //--------------------------------------------------------------
@@ -275,6 +301,8 @@ void ofApp::touchUp(ofTouchEventArgs &touch){
 void ofApp::touchDoubleTap(ofTouchEventArgs &touch){
     
     planes.clear();
+    //myPlane.clear();
+    debugTouch = false;
     
     //Clear mask
     maskFbos[0].begin();
@@ -283,7 +311,7 @@ void ofApp::touchDoubleTap(ofTouchEventArgs &touch){
     
     //Clear main fbo
     fbos[0].begin();
-    ofClear(0,0,0,255);
+    ofClear(0,0,0,0);
     fbos[0].end();
     
     
