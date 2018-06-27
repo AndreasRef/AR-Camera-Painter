@@ -158,7 +158,7 @@ void ofApp::draw() {
            
             camera.begin();
             processor->setARCameraMatrices();
-          
+            
             for (int i = 0; i < planes.size(); i++){
             ofMesh m;
             m.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -236,7 +236,10 @@ void ofApp::touchDown(ofTouchEventArgs &touch){
     //planes.clear();
     
     plane p = utils.getScreenPlane(1.0, 0);
+    //planes[0] = p;
     planes.push_back(p);
+    
+    myPlane = p;
     
     ofFbo temp;
     images.push_back(temp);
@@ -245,6 +248,9 @@ void ofApp::touchDown(ofTouchEventArgs &touch){
     //camImage.draw(0,0);
     fbos[0].draw(0,0);
     images.back().end();
+ 
+    
+    cout << ofToString("touchDown") << endl;
     
 }
 
@@ -253,11 +259,16 @@ void ofApp::touchMoved(ofTouchEventArgs &touch){
     bBrushDown = true;
     paintX = touch.x;
     paintY = touch.y;
+    
+    cout << ofToString("touchMoved") << endl;
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::touchUp(ofTouchEventArgs &touch){
     bBrushDown = false;
+    
+    cout << ofToString("touchUp") << endl;
 }
 
 //--------------------------------------------------------------
@@ -274,6 +285,9 @@ void ofApp::touchDoubleTap(ofTouchEventArgs &touch){
     fbos[0].begin();
     ofClear(0,0,0,255);
     fbos[0].end();
+    
+    
+    cout << ofToString("touchDoubleTap") << endl;
     
 }
 

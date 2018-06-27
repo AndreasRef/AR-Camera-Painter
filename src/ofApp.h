@@ -40,6 +40,8 @@ public:
     vector < plane > planes;
     vector < ofFbo > images;
     
+    plane myPlane;
+    
     ofFbo camImage;
     
     //Alpha shader new
