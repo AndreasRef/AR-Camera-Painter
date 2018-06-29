@@ -48,6 +48,7 @@ public:
     //Alpha shader new
     ofImage     brushImg;
     ofImage     eraserImg;
+    ofImage     uiBrushImg;
     
 //    vector<ofVideoPlayer> videos;
     vector<ofFbo> maskFbos;
@@ -75,7 +76,6 @@ public:
     bool debugTouch = false;
     
     ofFbo debugMask;
-    
     
 };
 

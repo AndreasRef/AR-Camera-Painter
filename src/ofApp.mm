@@ -56,9 +56,11 @@ void ofApp::setup() {
     
     brushImg.load("brush2.png");
     eraserImg.load("brush3.png");
+    uiBrushImg.load("brush2_ui.png");
     
     brushImg.setAnchorPercent(0.5, 0.5);
     eraserImg.setAnchorPercent(0.5, 0.5);
+    uiBrushImg.setAnchorPercent(0.5, 0.5);
     
     
 #ifdef TARGET_OPENGLES
@@ -196,22 +198,25 @@ void ofApp::draw() {
         }
     }
     ofDisableDepthTest();
-    // ========== DEBUG STUFF ============= //
-    int w = MIN(ofGetWidth(), ofGetHeight()) * 0.6;
-    int h = w;
-    int x = (ofGetWidth() - w)  * 0.5;
-    int y = (ofGetHeight() - h) * 0.5;
-    int p = 0;
-    
-    x = ofGetWidth()  * 0.2;
-    y = ofGetHeight() * 0.11;
-    p = ofGetHeight() * 0.035;
-    
-    //ofSetColor(ofColor::black);
-    font.drawString("frame num      = " + ofToString( ofGetFrameNum() ),    x, y+=p);
-    font.drawString("frame rate     = " + ofToString( ofGetFrameRate() ),   x, y+=p);
-    font.drawString("screen width   = " + ofToString( ofGetWidth() ),       x, y+=p);
-    font.drawString("screen height  = " + ofToString( ofGetHeight() ),      x, y+=p);
+    // ========== DEBUG / UI STUFF ============= //
+//    int w = MIN(ofGetWidth(), ofGetHeight()) * 0.6;
+//    int h = w;
+//    int x = (ofGetWidth() - w)  * 0.5;
+//    int y = (ofGetHeight() - h) * 0.5;
+//    int p = 0;
+//
+//    x = ofGetWidth()  * 0.2;
+//    y = ofGetHeight() * 0.11;
+//    p = ofGetHeight() * 0.035;
+
+    ofSetColor(ofColor::black);
+    ofDrawBitmapStringHighlight("Scribble with your fingers to capture reality.", 10, 30);
+    ofDrawBitmapStringHighlight("Double tap to clear.", 10, 50);
+        
+//    font.drawString("frame num      = " + ofToString( ofGetFrameNum() ),    x, y+=p);
+//    font.drawString("frame rate     = " + ofToString( ofGetFrameRate() ),   x, y+=p);
+//    font.drawString("screen width   = " + ofToString( ofGetWidth() ),       x, y+=p);
+//    font.drawString("screen height  = " + ofToString( ofGetHeight() ),      x, y+=p);
     
     
     //Alpha shader new
@@ -243,12 +248,15 @@ void ofApp::draw() {
     
     
     if(bBrushDown) { //Visualize the mask
+        //ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
         debugMask.begin();
         //ofDrawCircle(paintX, paintY, 10);
-        ofSetColor(0,255,0,brushAlpha);
-        brushImg.draw(paintX,paintY,brushSize,brushSize);
+        ofSetColor(0,255,0);
+        uiBrushImg.draw(paintX,paintY, brushSize,brushSize);
+        //ofDrawCircle(paintX,paintY,brushSize/3);
         debugMask.end();
         debugMask.draw(0,0);
+        //ofEnableBlendMode(OF_BLENDMODE_SCREEN);
     }
     
     //ofDrawCircle(paintX, paintY, 10);
@@ -323,6 +331,8 @@ void ofApp::touchUp(ofTouchEventArgs &touch){
     debugTouch = true;
     
     bBrushDown = false;
+    
+    
     
     cout << ofToString("touchUp") << endl;
 }
